@@ -6,7 +6,17 @@ namespace CSharpLess
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            //Console.WriteLine("Hello World!");
+
+            //new Delegates();
+            //new DelegateTwo();
+            //new DelegateThree();
+            //new DelegatesExample();
+
+            new LambdasExample();
+
+            Console.ReadKey();
         }
     }
 }
