@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,7 +18,16 @@ namespace WinFormsApp1
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            var form = new Form1();
+            form.Load += OnLoaded;
+            //form.ClientSize = new Size(800, 600); //ця пропертя це сайз без рамки
+            Application.Run(form);
+        }
+
+        private static void OnLoaded(object sender, EventArgs e)
+        {
+            var mainController = new MainController(sender as Form1);
+            mainController.Run();
         }
     }
 }

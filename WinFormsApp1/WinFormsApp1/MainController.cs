@@ -1,39 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WinFormsApp1
 {
     class MainController
     {
-        private readonly Form _mainForm;
+        private readonly Form root;
+        private readonly IMainView _mainView;
+        private readonly InfoController _infoController;
 
-        public MainController(Form mainForm)
+        public MainController(Form rootForm)
         {
-            _mainForm = mainForm;
+            root = rootForm;
+            _mainView = new MainView();
+            _mainView.InfoClicked += OnInfoClicked;
+            _mainView.AdminClicked += OnAdminClicked;
+
+            _infoController = new InfoController();
+            _infoController.BackClicked += OnBackFromInfoClicked;
+        }
+
+        private void OnInfoClicked()
+        {
+            _infoController.Run();
+            root.Controls.Add(_infoController.Scene);
+            _infoController.Scene.BringToFront(); // в ідеалі краще не класти на верх, а робити щоб на екрані завжди був лиш один скрін, всі інши - прибирати.
+        }
+
+        private void OnBackFromInfoClicked()
+        {
+            _infoController.Stop();
+            root.Controls.Remove(_infoController.Scene);
+        }
+
+        private void OnAdminClicked()
+        {
+
         }
 
         public void Run()
         {
-            Button helloButton = new Button();
-            helloButton.BackColor = Color.LightGray;
-            helloButton.ForeColor = Color.DarkGray;
-            helloButton.Location = new Point(10, 10);
-            helloButton.Text = "Привет";
-            _mainForm.Controls.Add(helloButton);
-            helloButton.Click += OnClicked;
-        }
-
-        private void OnClicked(object sender, EventArgs e)
-        {
-            _mainForm.Text = "OOOOOOO";
-            var myForm = new UserControl1();
-            myForm.Name = "AAAAAAAAAAAAA";
-            _mainForm.Controls.Add(myForm);
+            root.Controls.Add(_mainView.Scene);
         }
     }
 }
