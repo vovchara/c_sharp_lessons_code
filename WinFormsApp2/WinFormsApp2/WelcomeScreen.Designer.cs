@@ -58,7 +58,7 @@ namespace WinFormsApp2
             // 
             // centralBtn
             // 
-            this.centralBtn.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.centralBtn.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.centralBtn.Location = new System.Drawing.Point(291, 164);
             this.centralBtn.Name = "centralBtn";
             this.centralBtn.Size = new System.Drawing.Size(206, 174);
@@ -69,7 +69,7 @@ namespace WinFormsApp2
             // 
             // westBtn
             // 
-            this.westBtn.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.westBtn.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.westBtn.Location = new System.Drawing.Point(28, 164);
             this.westBtn.Name = "westBtn";
             this.westBtn.Size = new System.Drawing.Size(203, 174);

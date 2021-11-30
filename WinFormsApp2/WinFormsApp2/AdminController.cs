@@ -7,34 +7,31 @@ using System.Windows.Forms;
 
 namespace WinFormsApp2
 {
-    public class AdminController
+    public class AdminController : ControllerBase
     {
         public event Action Back = delegate { };
 
         private readonly IAdminView _adminView;
-        private readonly Form _scene;
         private const string user = "admin";
         private const string pass = "qwerty";
 
-        public AdminController(Form scene)
+        public AdminController(Form scene) : base(scene)
         {
-            _scene = scene;
             _adminView = new AdminScreen();
         }
 
-        public void Start()
+        public override void Start()
         {
             _adminView.BackClicked += BackHandler;
             _adminView.OkClicked += OkHandler;
-            _scene.Controls.Add(_adminView.GetScene);
-            _adminView.GetScene.BringToFront();
+            AddChild(_adminView.GetScene);
         }
 
-        public void Stop()
+        public override void Stop()
         {
             _adminView.BackClicked -= BackHandler;
             _adminView.OkClicked -= OkHandler;
-            _scene.Controls.Remove(_adminView.GetScene);
+            RemoveChild(_adminView.GetScene);
         }
 
         private void OkHandler(string u, string p)

@@ -7,26 +7,15 @@ using System.Windows.Forms;
 
 namespace WinFormsApp2
 {
-    class RootController
+    class RootController : ControllerBase
     {
-        private readonly Form _scene;
         private readonly IWelcomeView _welcomeView;
         private readonly AdminController _adminController;
 
-        public RootController(Form scene)
+        public RootController(Form scene) : base(scene)
         {
-            _scene = scene;
             _welcomeView = new WelcomeScreen();
-            _adminController = new AdminController(_scene);
-        }
-
-        public void Start()
-        {
-            _welcomeView.AdminClicked += AdminHandler;
-            _welcomeView.CentralClicked += CentralHandler;
-            _welcomeView.WestClicked += WestHadnler;
-            
-            _scene.Controls.Add(_welcomeView.GetScene);
+            _adminController = new AdminController(scene);
         }
 
         private void WestHadnler()
@@ -41,12 +30,32 @@ namespace WinFormsApp2
         {
             _adminController.Back += BackFromAdmin;
             _adminController.Start();
+            RemoveChild(_welcomeView.GetScene);
         }
 
         private void BackFromAdmin()
         {
             _adminController.Back -= BackFromAdmin;
             _adminController.Stop();
+            AddChild(_welcomeView.GetScene);
+        }
+
+        public override void Start()
+        {
+            _welcomeView.AdminClicked += AdminHandler;
+            _welcomeView.CentralClicked += CentralHandler;
+            _welcomeView.WestClicked += WestHadnler;
+
+            AddChild(_welcomeView.GetScene);
+        }
+
+        public override void Stop()
+        {
+            _welcomeView.AdminClicked -= AdminHandler;
+            _welcomeView.CentralClicked -= CentralHandler;
+            _welcomeView.WestClicked -= WestHadnler;
+
+            RemoveChild(_welcomeView.GetScene);
         }
     }
 }

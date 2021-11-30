@@ -29,6 +29,20 @@ namespace WinFormsApp2
         private void centralBtn_Click(object sender, EventArgs e)
         {
             CentralClicked();
+
+            var but = new Button();
+            but.Size = new Size(200, 200);
+            but.Location = new Point(300, 400);
+            //but.Click += (s, e) => Parent.Text = "AAAAAAAAA";
+            but.Click += OnCentCl;
+            Controls.Add(but);
+        }
+
+        private void OnCentCl(object sender, EventArgs e)
+        {
+            (sender as Button).Text = "AAAAAAAAA";
+            (sender as Button).Click -= OnCentCl;
+            Controls.Remove(sender as Button);
         }
 
         private void adminBtn_Click(object sender, EventArgs e)
