@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:localVM="clr-namespace:MVVMProj2.viewmodel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="600" Width="800">
     <Window.DataContext>
         <localVM:ApplicationViewModel/>
     </Window.DataContext>
@@ -19,6 +19,7 @@
         <Style TargetType="Button">
             <Setter Property="Width" Value="40" />
             <Setter Property="Margin" Value="5" />
+            <Setter Property="Background" Value="Cyan" />
         </Style>
     </Window.Resources>
     <Grid>
@@ -36,7 +37,7 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="5">
-                        <TextBlock FontSize="18" Text="{Binding Path=Title}" />
+                        <TextBlock FontSize="20" Text="{Binding Path=Title}" />
                         <TextBlock Text="{Binding Path=Company}" />
                         <TextBlock Text="{Binding Path=Price}" />
                     </StackPanel>
@@ -46,6 +47,7 @@
 
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Button Command="{Binding AddSomeCommand}">+</Button>
+            <Button Command="{Binding RemoveSomeCommand}" CommandParameter="{Binding SelectedPhone}">-</Button>
         </StackPanel>
 
         <StackPanel Grid.Column="1" DataContext="{Binding SelectedPhone}">

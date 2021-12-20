@@ -36,22 +36,26 @@ namespace MVVMProj2.viewmodel
                 new PhoneModel {Title="Mi5S", Company="Xiaomi", Price=35000 },
                 new PhoneModel {Title="3310", Company="Nokia", Price=150 }
             };
-        }
 
-        private RelayCommand addCommand;
-        public RelayCommand AddSomeCommand
-        {
-            get
+            AddSomeCommand = new RelayCommand(obj =>
             {
-                return addCommand ??
-                    (addCommand = new RelayCommand(obj =>
-                    {
-                        PhoneModel phone = new PhoneModel();
-                        Phones.Insert(0, phone);
-                        SelectedPhone = phone;
-                    }));
-            }
+                PhoneModel phone = new PhoneModel();
+                Phones.Insert(0, phone);
+                SelectedPhone = phone;
+            });
+
+            RemoveSomeCommand = new RelayCommand(obj =>
+            {
+                var phone = obj as PhoneModel;
+                if (phone != null)
+                {
+                    Phones.Remove(phone);
+                }
+            },
+            (obj) => Phones.Count > 0);
         }
+        public RelayCommand AddSomeCommand { get; }
+        public RelayCommand RemoveSomeCommand { get; }
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         public void OnPropertyChanged([CallerMemberName] string prop = "")
