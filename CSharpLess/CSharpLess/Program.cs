@@ -8,6 +8,8 @@ namespace CSharpLess
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.Unicode;
+            Thread t = Thread.CurrentThread;
+            t.Name = "MAIN_MAIN";
 
             //FirstExample();
             //CreateThreadExample();
@@ -15,11 +17,12 @@ namespace CSharpLess
             //SharedResExample();
             //SyncLockExample();
             //SyncMonitorExample();
+            //SyncMonitorExample2();
             //AutoResetEventExample();
             //MutexExample();
             //SemaphoreExample();
             //TimerExample();
-            //ThreadPoolExample();
+            ThreadPoolExample();
 
             Console.ReadLine();
         }
@@ -45,7 +48,8 @@ namespace CSharpLess
         private static void CreateThreadExample()
         {
             // создаем новый поток
-            Thread myThread = new Thread(new ThreadStart(Count));
+            Thread myThread = new Thread(Count);
+            //myThread.IsBackground = true; //якщо зробити його бекграунд - то програма не буде чекати його виконання.
             myThread.Start(); // запускаем поток
 
             for (int i = 1; i < 9; i++)
@@ -55,7 +59,6 @@ namespace CSharpLess
                 Thread.Sleep(300);
             }
         }
-
         private static void Count()
         {
             for (int i = 1; i < 9; i++)
@@ -70,11 +73,13 @@ namespace CSharpLess
         {
             int number = 4;
             // создаем новый поток
-            Thread myThread = new Thread(new ParameterizedThreadStart(Count2));
-            myThread.Start(number);
+            //Thread myThread = new Thread(new ParameterizedThreadStart(Count2));
 
-            //Thread myThread = new Thread(() => Count2(number)); //will do the same
-            //myThread.Start(); //will do the same
+            //Thread myThread = new Thread(Count2);
+            //myThread.Start(number);
+
+            Thread myThread = new Thread(() => Count2(number)); //will do the same
+            myThread.Start(); //will do the same
 
             for (int i = 1; i < 9; i++)
             {
@@ -83,7 +88,6 @@ namespace CSharpLess
                 Thread.Sleep(300);
             }
         }
-
         private static void Count2(object x)
         {
             for (int i = 1; i < 9; i++)
@@ -166,7 +170,77 @@ namespace CSharpLess
             }
             finally
             {
-                if (acquiredLock) Monitor.Exit(locker);
+                if (acquiredLock)
+                {
+                    Monitor.Exit(locker);
+                }
+            }
+        }
+
+        static void SyncMonitorExample2()
+        {
+            Thread writeOneThread = new Thread(() => WriteOneOrTwoFiveTimes("One"));
+            Thread writeTwoThread = new Thread(() => WriteOneOrTwoFiveTimes("Two"));
+
+            writeOneThread.Start();
+            writeTwoThread.Start();
+
+            writeOneThread.Join();
+            writeTwoThread.Join();
+
+            Console.WriteLine("Well done!");
+            Console.ReadLine();
+        }
+
+        static void WriteOne(bool isRunning)
+        {
+            lock (locker)
+            {
+                if (!isRunning)
+                {
+                    Monitor.Pulse(locker);  /*Снимаем блокировку с локера*/
+                    return;                 /*завершаем работу метода*/
+                }
+
+                Console.Write("One - ");
+
+                Monitor.Pulse(locker);      /*Снимаем блокировку с локера*/
+                Monitor.Wait(locker);       /*Останавливаем работу потока и ожидаем снятия блокировки с локера (сигнала от Monitor.Pulse(locker) вызваного другим потоком)*/
+            }
+        }
+        static void WriteTwo(bool isRunning)
+        {
+            lock (locker)
+            {
+                if (!isRunning)
+                {
+                    Monitor.Pulse(locker);
+                    return;
+                }
+                Console.WriteLine("Two");
+                Monitor.Pulse(locker);
+                Monitor.Wait(locker);
+            }
+        }
+        static void WriteOneOrTwoFiveTimes(string oneOrTwo)
+        {
+            if (oneOrTwo == "One")
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    WriteOne(true);    /*Вызываем метод 5 раз*/
+                }     
+
+                WriteOne(false);      /*Вызываем для разблокировки lockerа и завершения работы*/
+            }
+            else
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    WriteTwo(true);
+                }
+
+                WriteTwo(false);
             }
         }
 
@@ -226,14 +300,14 @@ namespace CSharpLess
         class Reader
         {
             // создаем семафор
-            static Semaphore sem = new Semaphore(3, 3);
+            static SemaphoreSlim sem = new SemaphoreSlim(3, 3);
             Thread myThread;
             int count = 3;// счетчик чтения
 
             public Reader(int i)
             {
                 myThread = new Thread(Read);
-                myThread.Name = $"Читатель {i.ToString()}";
+                myThread.Name = $"Читатель {i}";
                 myThread.Start();
             }
 
@@ -241,7 +315,7 @@ namespace CSharpLess
             {
                 while (count > 0)
                 {
-                    sem.WaitOne();
+                    sem.Wait();
 
                     Console.WriteLine($"{Thread.CurrentThread.Name} входит в библиотеку");
 
@@ -272,6 +346,8 @@ namespace CSharpLess
             for (int i = 1; i < 9; i++, x++)
             {
                 Console.WriteLine($"{x * i}");
+                Thread t = Thread.CurrentThread;
+                Console.WriteLine(t.IsBackground);
             }
         }
 
@@ -284,6 +360,7 @@ namespace CSharpLess
             for (int i = 0; i < 5; i++)
             {
                 ThreadPool.QueueUserWorkItem(JobForAThread);
+                ThreadPool.QueueUserWorkItem(JobForAThreadQ);
             }
                 
             Thread.Sleep(3000);
@@ -293,6 +370,15 @@ namespace CSharpLess
             for (int i = 0; i < 3; i++)
             {
                 Console.WriteLine($"цикл {i}, выполнение внутри потока из пула {Thread.CurrentThread.ManagedThreadId}");
+                Thread.Sleep(50);
+            }
+        }
+
+        static void JobForAThreadQ(object state)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                Console.WriteLine($"QQQцикл {i}, выполнение внутри потока из пула {Thread.CurrentThread.ManagedThreadId}");
                 Thread.Sleep(50);
             }
         }
