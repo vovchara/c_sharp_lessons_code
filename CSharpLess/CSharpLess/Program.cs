@@ -26,14 +26,14 @@ namespace CSharpLess
             //TasksWithResult();
             //ContinuationTask();
             //ContinuationTaskWithResult();
-            //ContinuationSeveralTasks();
+            ContinuationSeveralTasks();
             //ParallelExample();
             //ParallelFor();
             //ParallelForeach();
             //ParallelBreak();
             //CancelExample();
             //CancelExternalFunc();
-            CancelParallel();
+            //CancelParallel();
 
             Console.ReadLine();
         }
@@ -81,6 +81,7 @@ namespace CSharpLess
             Console.WriteLine("Начало работы метода Display");
             Thread.Sleep(1000);
             Console.WriteLine("Завершение работы метода Display");
+            //throw new Exception("AAAAAAAAAAAAA");
         }
 
         private static void TaskWaited()
@@ -160,13 +161,15 @@ namespace CSharpLess
 
         private static void TasksWithResult()
         {
-            Task<int> task1 = Task.Run(() => Factorial(5));
+            Task<int> task1 = Task.Run(() => Factorial(6));
+            var factRes = task1.Result;
 
-            Console.WriteLine($"Факториал числа 5 равен {task1.Result}"); // ожидаем получение результата
+            Console.WriteLine($"Факториал числа 6 равен {factRes}"); // ожидаем получение результата
 
             Task<Book> task2 = Task.Run(() =>
             {
-                return new Book { Title = "Война и мир", Author = "Л. Толстой" };
+                var book = new Book { Title = "Война и мир", Author = "Л. Толстой" };
+                return book;
             });
 
             Book b = task2.Result;  // ожидаем получение результата
@@ -191,24 +194,35 @@ namespace CSharpLess
 
         private static void ContinuationTask()
         {
-            Task task1 = new Task(() => {
-                Console.WriteLine($"Id задачи: {Task.CurrentId}");
+            Task zmolotyTask = new Task(() => {
+                Console.WriteLine($"Molem coffe. Id первой задачи: {Task.CurrentId}");
+                Thread.Sleep(2000);
             });
 
-            // задача продолжения
-            Task task2 = task1.ContinueWith(Display2);
+            //var coffeTask = zmolotyTask.ContinueWith(zvarytyTask).ContinueWith(nalytyTask).ContinueWith(podatyTask);
+            //zmolotyTask.Start();
+            //coffeTask.Wait();
 
-            task1.Start();
+            // задача продолжения
+            Task coffeTask = zmolotyTask.ContinueWith(ZvarytyTask).ContinueWith(NalytyTask);
+            zmolotyTask.Start();
+            //coffeTask.Start(); // exception!!
 
             // ждем окончания второй задачи
-            task2.Wait();
+            coffeTask.Wait();
             Console.WriteLine("Завершение метода Main");
         }
-        private static void Display2(Task t)
+        private static void ZvarytyTask(Task t)
         {
-            Console.WriteLine($"Id задачи: {Task.CurrentId}");
-            Console.WriteLine($"Id предыдущей задачи: {t.Id}");
+            Console.WriteLine($"Varym coffe. Id задачи: {Task.CurrentId}");
+            Console.WriteLine($"Varym coffe. Id предыдущей задачи: {t.Id}");
+            Thread.Sleep(2000);
+        }
+
+        private static void NalytyTask(Task t)
+        {
             Thread.Sleep(3000);
+            Console.WriteLine("Nalyvaem coffe");
         }
 
         private static void ContinuationTaskWithResult()
@@ -216,7 +230,7 @@ namespace CSharpLess
             var task1 = new Task<int>(() => Sum(4, 5));
 
             // задача продолжения
-            var task2 = task1.ContinueWith(sum => Display3(sum.Result));
+            var task2 = task1.ContinueWith(sumTsk => Display3(sumTsk.Result)).ContinueWith(sumTsk => SendSumSms(sumTsk.Result));
 
             task1.Start();
 
@@ -224,10 +238,21 @@ namespace CSharpLess
             task2.Wait();
             Console.WriteLine("End of Main");
         }
-        static int Sum(int a, int b) => a + b;
-        static void Display3(int sum)
+        static int Sum(int a, int b)
+        {
+            Console.WriteLine("Sum was calculated.");
+            return a + b;
+        }
+
+        static int Display3(int sum)
         {
             Console.WriteLine($"Sum: {sum}");
+            return sum;
+        }
+
+        static void SendSumSms(int sum)
+        {
+            Console.WriteLine($"Sending sms with sum = {sum}");
         }
 
         private static void ContinuationSeveralTasks()
