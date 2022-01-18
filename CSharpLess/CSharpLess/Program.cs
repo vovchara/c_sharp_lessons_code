@@ -26,7 +26,8 @@ namespace CSharpLess
             //TasksWithResult();
             //ContinuationTask();
             //ContinuationTaskWithResult();
-            ContinuationSeveralTasks();
+            //ContinuationSeveralTasks();
+            ContinuationSeveralTasksWithOptions();
             //ParallelExample();
             //ParallelFor();
             //ParallelForeach();
@@ -81,13 +82,13 @@ namespace CSharpLess
             Console.WriteLine("Начало работы метода Display");
             Thread.Sleep(1000);
             Console.WriteLine("Завершение работы метода Display");
-            //throw new Exception("AAAAAAAAAAAAA");
+            throw new Exception("AAAAAAAAAAAAA");
         }
 
         private static void TaskWaited()
         {
             var myTask = Task.Run(Display);
-            myTask.Wait();
+            //myTask.Wait();
 
             Console.WriteLine("Завершение метода Main");
         }
@@ -284,6 +285,28 @@ namespace CSharpLess
         static void Display4(Task t)
         {
             Console.WriteLine($"Id задачи: {Task.CurrentId}");
+        }
+
+        private static void ContinuationSeveralTasksWithOptions()
+        {
+            Task taskA = new Task(TaskA);
+            taskA.ContinueWith(TaskB, TaskContinuationOptions.OnlyOnRanToCompletion);
+            taskA.ContinueWith(TaskC, TaskContinuationOptions.OnlyOnFaulted);
+            taskA.Start();
+            //taskA.Wait();
+        }
+        private static void TaskA()
+        {
+            throw new Exception("EXCTEPTION THROWN !!!!");
+            Console.WriteLine("Task A done");
+        }
+        private static void TaskB(Task t)
+        {
+            Console.WriteLine("Task B done");
+        }
+        private static void TaskC(Task t)
+        {
+            Console.WriteLine("Task C done");
         }
 
         private static void ParallelExample()
