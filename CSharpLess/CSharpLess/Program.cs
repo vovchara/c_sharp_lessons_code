@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,14 +28,14 @@ namespace CSharpLess
             //ContinuationTask();
             //ContinuationTaskWithResult();
             //ContinuationSeveralTasks();
-            ContinuationSeveralTasksWithOptions();
+            //ContinuationSeveralTasksWithOptions();
             //ParallelExample();
             //ParallelFor();
             //ParallelForeach();
             //ParallelBreak();
             //CancelExample();
             //CancelExternalFunc();
-            //CancelParallel();
+            CancelParallel();
 
             Console.ReadLine();
         }
@@ -314,17 +315,17 @@ namespace CSharpLess
             Parallel.Invoke(Display5,
             () =>
             {
-                Console.WriteLine($"Выполняется задача {Task.CurrentId}");
+                Console.WriteLine($"Выполняется задача {Task.CurrentId}. Thread {Thread.CurrentThread.ManagedThreadId}");
                 Thread.Sleep(3000);
-                Console.WriteLine($"Конец задачи {Task.CurrentId}");
+                Console.WriteLine($"Конец задачи {Task.CurrentId}. Thread {Thread.CurrentThread.ManagedThreadId}");
             },
             () => Factorial2(5));
         }
         static void Display5()
         {
-            Console.WriteLine($"Выполняется задача {Task.CurrentId} Display");
+            Console.WriteLine($"Выполняется задача {Task.CurrentId} Display. Thread {Thread.CurrentThread.ManagedThreadId}");
             Thread.Sleep(3000);
-            Console.WriteLine($"Конец задачи {Task.CurrentId} Display");
+            Console.WriteLine($"Конец задачи {Task.CurrentId} Display. Thread {Thread.CurrentThread.ManagedThreadId}");
         }
         static void Factorial2(int x)
         {
@@ -334,14 +335,23 @@ namespace CSharpLess
             {
                 result *= i;
             }
-            Console.WriteLine($"Выполняется задача {Task.CurrentId} Факториал");
+            Console.WriteLine($"Выполняется задача {Task.CurrentId} Факториал. Thread {Thread.CurrentThread.ManagedThreadId}");
             Thread.Sleep(3000);
-            Console.WriteLine($"Конец задачи { Task.CurrentId} Результат {result}");
+            Console.WriteLine($"Конец задачи { Task.CurrentId} Результат {result}. Thread {Thread.CurrentThread.ManagedThreadId}");
         }
 
         private static void ParallelFor()
         {
+            var watch = new Stopwatch();
+            watch.Start();
             Parallel.For(1, 10, Factorial3);
+            //for (var i = 1; i < 10; i++)
+            //{
+            //    Factorial3(i);
+            //}
+            watch.Stop();
+            var elapsed = watch.ElapsedMilliseconds;
+            Console.WriteLine($"ELAPSED:{elapsed}");
         }
         static void Factorial3(int x)
         {
@@ -353,7 +363,7 @@ namespace CSharpLess
             }
             Console.WriteLine($"Выполняется задача {Task.CurrentId}");
             Console.WriteLine($"Факториал числа {x} равен {result}");
-            Thread.Sleep(3000);
+            Thread.Sleep(50);
         }
 
         private static void ParallelForeach()
@@ -366,7 +376,9 @@ namespace CSharpLess
             ParallelLoopResult result = Parallel.For(1, 10, Factorial4);
 
             if (!result.IsCompleted)
+            {
                 Console.WriteLine($"Выполнение цикла завершено на итерации {result.LowestBreakIteration}");
+            }
         }
         static void Factorial4(int x, ParallelLoopState pls)
         {
@@ -376,7 +388,9 @@ namespace CSharpLess
             {
                 result *= i;
                 if (i == 5)
+                {
                     pls.Break();
+                }
             }
             Console.WriteLine($"Выполняется задача {Task.CurrentId}");
             Console.WriteLine($"Факториал числа {x} равен {result}");
@@ -386,6 +400,7 @@ namespace CSharpLess
         {
             CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
             CancellationToken token = cancelTokenSource.Token;
+            //var isNeedContinue = true;
             int number = 6;
 
             Task task1 = new Task(() =>
@@ -397,7 +412,13 @@ namespace CSharpLess
                     {
                         Console.WriteLine("Операция прервана");
                         return;
+                        //Console.WriteLine("HAHA FUCK YOU!!!");
                     }
+                    //if (!isNeedContinue)
+                    //{
+                    //    Console.WriteLine("Операция прервана");
+                    //    return;
+                    //}
 
                     result *= i;
                     Console.WriteLine($"Факториал числа {i} равен {result}");
@@ -409,7 +430,10 @@ namespace CSharpLess
             Console.WriteLine("Введите Y для отмены операции или другой символ для ее продолжения:");
             string s = Console.ReadLine();
             if (s.ToUpper() == "Y")
+            {
                 cancelTokenSource.Cancel();
+                //isNeedContinue = false;
+            }
         }
 
         private static void CancelExternalFunc()
