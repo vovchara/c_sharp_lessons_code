@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShopModel.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,26 @@ namespace CSharpLess.View
     /// </summary>
     public partial class CategoryPage : Page
     {
+        public event Action<GoodsItemModel> AddGoodClicked = delegate { };
+        public event Action BackClicked = delegate { };
+
         public CategoryPage()
         {
             InitializeComponent();
+            BackBtn.Click += (s, e) => BackClicked();
+        }
+
+        public void SetData(CategoryModel model)
+        {
+            TitleTxt.Content = model.Name;
+
+            foreach (var good in model.Goods)
+            {
+                var btn = new Button();
+                btn.Content = $"{good.Name} : {good.Price} UAH";
+                btn.Click += (s, e) => AddGoodClicked(good);
+                ItemsHolder.Children.Add(btn);
+            }
         }
     }
 }

@@ -36,5 +36,10 @@ namespace CSharpLess.View
             }
             LoginEvent(LoginInputTxt.Text, PassInputTxt.Text);
         }
+
+        public void ShowCredentialsError()
+        {
+            MessageBox.Show("Incorrect credentials!");
+        }
     }
 }

@@ -9,6 +9,15 @@
       Title="HomePage">
 
     <Grid>
-        
+        <Label x:Name="TitleTxt" Content="Hello, [user]! Select category or other stuff" FontSize="20" HorizontalAlignment="Center" Margin="0,24,0,0" VerticalAlignment="Top" Width="588" FontWeight="Bold"/>
+        <StackPanel x:Name="CategoryHolder" HorizontalAlignment="Left" Margin="30,100,100,120">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Margin" Value="0,10,0,0"/>
+                </Style>
+            </StackPanel.Resources>
+        </StackPanel>
+        <Button Content="History" HorizontalAlignment="Left" Margin="662,299,0,0" VerticalAlignment="Top" Height="31" Width="100"/>
+        <Button Content="CART" HorizontalAlignment="Left" Margin="662,346,0,0" VerticalAlignment="Top" Height="60" Width="100"/>
     </Grid>
 </Page>

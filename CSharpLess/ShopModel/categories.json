@@ -1,0 +1,56 @@
+[
+	{
+		"Id": 1,
+		"Name": "TV",
+		"Goods": [
+			{
+				"Id": 11,
+				"Name": "Xiaomi 55",
+				"Price": 12000,
+				"IconUrl": "https://pcshop.ua/image/cache/catalog/tovar/televizor-xiaomi-mi-tv-p1-55-l55m6-6aeu-1024x768.jpg"
+			},
+			{
+				"Id": 120,
+				"Name": "LG 65",
+				"Price": 35000,
+				"IconUrl": "https://pcshop.ua/image/cache/catalog/tovar/televizor-lg-65up7700-europe-1024x768.jpg"
+			}
+		]
+	},
+	{
+		"Id": 27,
+		"Name": "Apple",
+		"Goods": [
+			{
+				"Id": 313,
+				"Name": "iPhone 12",
+				"Price": 25000,
+				"IconUrl": "https://pcshop.ua/image/cache/catalog/tovar/46862-1024x768.jpg"
+			},
+			{
+				"Id": 314,
+				"Name": "iPhone 13",
+				"Price": 34000,
+				"IconUrl": "https://pcshop.ua/image/cache/catalog/tovar/smartfon-apple-iphone-13-128-gb-blue-mlpk3-1024x768.jpg"
+			}
+		]
+	},
+	{
+		"Id": 33,
+		"Name": "Home and Garden",
+		"Goods": [
+			{
+				"Id": 511,
+				"Name": "Dyvan",
+				"Price": 20000,
+				"IconUrl": "https://kabinet.ua/image/cache/catalog/divany/vizit-16-auto_width_1100.jpg"
+			},
+			{
+				"Id": 512,
+				"Name": "Vidro",
+				"Price": 400,
+				"IconUrl": "https://images.ua.prom.st/2730484284_w640_h640_2730484284.jpg"
+			}
+		]
+	}
+]

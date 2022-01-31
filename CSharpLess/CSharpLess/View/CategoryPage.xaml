@@ -9,6 +9,14 @@
       Title="CategoryPage">
 
     <Grid>
-        
+        <Label x:Name="TitleTxt" FontSize="30" Content="" HorizontalAlignment="Left" Margin="350,24,0,0" VerticalAlignment="Top" Width="427"/>
+        <StackPanel x:Name="ItemsHolder" HorizontalAlignment="Left" Margin="30,100,100,120">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Margin" Value="0,10,0,0"/>
+                </Style>
+            </StackPanel.Resources>
+        </StackPanel>
+        <Button x:Name="BackBtn" Content="go back" HorizontalAlignment="Left" Margin="30,24,0,0" VerticalAlignment="Top" Height="39" Width="70"/>
     </Grid>
 </Page>
