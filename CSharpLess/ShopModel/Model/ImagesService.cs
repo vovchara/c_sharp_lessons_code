@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ShopModel.Model
 {
-    public class ImagesService
+    public class ImagesService : IImagesService
     {
         public async Task<bool> TryDownloadBaseImages()
         {

@@ -1,16 +1,17 @@
-﻿using CSharpLess.View;
+﻿using CSharpLess.Scene;
+using CSharpLess.View;
 using ShopModel.Model;
 
 namespace CSharpLess.Controller
 {
     public class LoginController : UIControllerBase
     {
-        private readonly UserCredentialsService _credentialsService;
+        private readonly IUserCredentialsService _credentialsService;
         private LoginPage _loginPage;
 
-        public LoginController() : base()
+        public LoginController(SceneManager sceneManager, IUserCredentialsService credentialsService) : base(sceneManager)
         {
-            _credentialsService = new UserCredentialsService();
+            _credentialsService = credentialsService;
         }
 
         protected override async void RunInternal()

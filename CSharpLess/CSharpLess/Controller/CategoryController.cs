@@ -1,4 +1,5 @@
-﻿using CSharpLess.View;
+﻿using CSharpLess.Scene;
+using CSharpLess.View;
 using ShopModel.Model;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace CSharpLess.Controller
         private readonly CategoryModel _model;
         private CategoryPage _categoryPage;
 
-        public CategoryController(CategoryModel model)
+        public CategoryController(SceneManager sceneManager, CategoryModel model) : base(sceneManager)
         {
             _model = model;
         }

@@ -7,17 +7,23 @@ namespace CSharpLess.Scene
 {
     public class SceneManager
     {
-        private static SceneManager _instance;
+        //private static SceneManager _instance;
 
-        public static SceneManager GetInstance()
-        {
-            if (_instance == null)
-            {
-                _instance = new SceneManager();
-            }
-            return _instance;
-        }
-        private SceneManager()
+        //public static SceneManager GetInstance()
+        //{
+        //    if (_instance == null)
+        //    {
+        //        _instance = new SceneManager();
+        //    }
+        //    return _instance;
+        //}
+        //private SceneManager()
+        //{
+        //    _pagesStack = new Stack<Page>();
+        //    _empty = new Page();
+        //}
+
+        public SceneManager()
         {
             _pagesStack = new Stack<Page>();
             _empty = new Page();

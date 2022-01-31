@@ -1,13 +1,11 @@
 ﻿using Microsoft.Data.Sqlite;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ShopModel.Model
 {
-    public class UserCredentialsService
+    public class UserCredentialsService : IUserCredentialsService
     {
         public async Task<bool> TryLogin(string login, string password)
         {

@@ -1,4 +1,5 @@
-﻿using CSharpLess.View;
+﻿using CSharpLess.Scene;
+using CSharpLess.View;
 using ShopModel.Model;
 using System;
 using System.Linq;
@@ -11,11 +12,14 @@ namespace CSharpLess.Controller
         private readonly UserSessionStorage _sessionStorage;
         private HomePage _homePage;
         private CategoryModel[] _categories;
+        //todo remove me after IoC
+        private SceneManager _sm;
 
-        public HomeController()
+        public HomeController(SceneManager sceneManager) : base(sceneManager)
         {
             _categoriesService = new CategoriesService();
             _sessionStorage = UserSessionStorage.GetInstance();
+            _sm = sceneManager;
         }
 
         protected override async void RunInternal()
@@ -34,7 +38,7 @@ namespace CSharpLess.Controller
                 return;
             }
             var cat = _categories.FirstOrDefault(c => c.Id == catId);
-            var categoryController = new CategoryController(cat);
+            var categoryController = new CategoryController(_sm, cat);
             await categoryController.Run();
         }
 

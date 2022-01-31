@@ -8,22 +8,26 @@ namespace CSharpLess.Controller
 {
     public class RootController : ControllerBase
     {
-        private readonly ImagesService _imagesService;
-        public RootController()
+        private readonly IImagesService _imagesService;
+        private readonly SceneManager _sceneManager;
+        private readonly ControllerFactory _controllerFactory;
+        public RootController(ControllerFactory controllerFactory, SceneManager sceneManager, IImagesService imagesService)
         {
-            _imagesService = new ImagesService();
+            _controllerFactory = controllerFactory;
+            _imagesService = imagesService;
+            _sceneManager = sceneManager;
         }
 
         public override async Task Run()
         {
             //показуємо бублік
             var loading = new LoadingCirclePage();
-            await SceneManager.GetInstance().Show(loading);
+            await _sceneManager.Show(loading);
             
             //грузим базові реси, картінки і т д
             var isLoaded = await _imagesService.TryDownloadBaseImages();
             //ховаєм бублік
-            await SceneManager.GetInstance().Hide(loading);
+            await _sceneManager.Hide(loading);
 
             if (!isLoaded)
             {
@@ -31,11 +35,11 @@ namespace CSharpLess.Controller
                 return;
             }
             //показуємо логін
-            var loginController = new LoginController();
+            var loginController = _controllerFactory.Create<LoginController>();
             await loginController.Run();
 
             //включаємо хом пейдж контроллер
-            var homeController = new HomeController();
+            var homeController = _controllerFactory.Create<HomeController>();
             await homeController.Run();
         }
 

@@ -10,9 +10,9 @@ namespace CSharpLess.Controller
         private readonly TaskCompletionSource _tcs = new TaskCompletionSource();
         private readonly SceneManager _sceneManager;
 
-        public UIControllerBase()
+        public UIControllerBase(SceneManager sceneManager)
         {
-            _sceneManager = SceneManager.GetInstance();
+            _sceneManager = sceneManager;
         }
 
         public override Task Run()
