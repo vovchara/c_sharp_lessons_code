@@ -18,12 +18,12 @@ namespace CSharpLess.Controller
         {
             //показуємо бублік
             var loading = new LoadingCirclePage();
-            await SceneManager.GetInstance().Show(loading);
+            await _sceneManager.Show(loading);
             
             //грузим базові реси, картінки і т д
             var isLoaded = await _imagesService.TryDownloadBaseImages();
             //ховаєм бублік
-            SceneManager.GetInstance().Hide(loading);
+            await _sceneManager.Hide(loading);
 
             if (!isLoaded)
             {
@@ -35,8 +35,10 @@ namespace CSharpLess.Controller
             await loginController.Run();
 
             //включаємо хом пейдж контроллер
-
+            var homeController = new HomeController();
+            await homeController.Run();
         }
+
 
         public override void Dispose()
         {

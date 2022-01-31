@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace CSharpLess.Scene
@@ -20,23 +21,35 @@ namespace CSharpLess.Scene
         }
 
         private Frame _rootFrame;
+        private readonly Page _empty = new Page();
+
         public void SetRoot(Frame rootFrame)
         {
             _rootFrame = rootFrame;
         }
 
-        public async Task Show(Page page)
+        public Task Show(Page page)
         {
+            var tcs = new TaskCompletionSource(); //для того щоб відпустити await Show лише тоді як контент відрендериться на екрані.
+            void OnContentReady(object sender, EventArgs e) //локальний хендлер щоб можна було кожному виклику Show давати свій власний хендлер та відписуватись всередині нього.
+            {
+                _rootFrame.ContentRendered -= OnContentReady;
+                tcs.TrySetResult();
+            }
             _rootFrame.Content = page;
-            await Task.Delay(5);
+            _rootFrame.ContentRendered += OnContentReady;
+            return tcs.Task;
         }
 
-        public void Hide(Page page)
+        public Task Hide(Page page)
         {
-            if (_rootFrame.Content == page)
+            if (_rootFrame.Content != page)
             {
-                _rootFrame.Content = null;
+                //log error
+                return Task.CompletedTask;
             }
+
+            return Show(_empty);
         }
     }
 }

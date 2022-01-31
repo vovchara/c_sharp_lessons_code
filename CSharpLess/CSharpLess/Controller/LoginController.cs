@@ -7,31 +7,44 @@ namespace CSharpLess.Controller
 {
     public class LoginController : ControllerBase
     {
-        private readonly SceneManager _sceneManager;
         private readonly UserCredentialsService _credentialsService;
         private LoginPage _loginPage;
+        private readonly TaskCompletionSource _tcs = new TaskCompletionSource();
 
         public LoginController()
         {
-            _sceneManager = SceneManager.GetInstance();
             _credentialsService = new UserCredentialsService();
         }
 
         public override async Task Run()
         {
-            _loginPage = new LoginPage();
+            _loginPage = await CreateAndShowPage<LoginPage>(); //_loginPage = new LoginPage(); //await _sceneManager.Show(_loginPage); //було
             _loginPage.LoginEvent += OnLogin;
-            await _sceneManager.Show(_loginPage);
+            
+            await _tcs.Task;
         }
 
         private async void OnLogin(string login, string pass)
         {
             var isUserCorrect = await _credentialsService.TryLogin(login, pass);
+            if (isUserCorrect)
+            {
+                _tcs.TrySetResult(); //відпускаємо таск і логіка там де визивали await Run() йде далі.
+                Dispose();
+            }
+            else
+            {
+                _loginPage.ShowIncorrectCredentials();
+            }
         }
 
-        public override void Dispose()
+        public override async void Dispose()
         {
-            _loginPage.LoginEvent -= OnLogin;
+            if (_loginPage != null)
+            {
+                _loginPage.LoginEvent -= OnLogin;
+                await HidePage(_loginPage); //_sceneManager.Hide(_loginPage); //було
+            }
         }
     }
 }

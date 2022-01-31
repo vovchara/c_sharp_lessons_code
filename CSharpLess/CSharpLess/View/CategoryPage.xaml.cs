@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using ShopModel.Model;
+using System;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CSharpLess.View
 {
@@ -20,9 +9,24 @@ namespace CSharpLess.View
     /// </summary>
     public partial class CategoryPage : Page
     {
+        public event Action BackClicked = delegate { };
+
         public CategoryPage()
         {
             InitializeComponent();
+            BackBtn.Click += (s,e) => BackClicked();
+        }
+
+        internal void SetData(CategoryModel category)
+        {
+            foreach(var good in category.Goods)
+            {
+                var button = new Button();
+                button.Content = $"{good.Name} : {good.Price}";
+                ItemsHolder.Children.Add(button);
+            }
+
+            TitleTxt.Content = category.Name;
         }
     }
 }
