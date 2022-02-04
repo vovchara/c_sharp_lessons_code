@@ -1,6 +1,6 @@
-﻿using CSharpLess.View;
+﻿using CSharpLess.Scene;
+using CSharpLess.View;
 using ShopModel.Model;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,14 +8,20 @@ namespace CSharpLess.Controller
 {
     public class HomeController : ControllerBase
     {
+        private readonly CategoryController _categoryController;
+        private readonly ICategoriesService _categoriesService;
         private HomePage _homePage;
         private UserSessionStorage _sessionStorage;
-        private CategoriesService _categoriesService;
         private CategoryModel[] _categories;
-        public HomeController()
+        public HomeController(ISceneManager sceneManager, 
+            CategoryController categoryController, 
+            ICategoriesService categoriesService,
+            UserSessionStorage sessionStorage) 
+            : base(sceneManager)
         {
-            _sessionStorage = UserSessionStorage.GetInstance();
-            _categoriesService = new CategoriesService();
+            _sessionStorage = sessionStorage;
+            _categoriesService = categoriesService;
+            _categoryController = categoryController;
         }
 
         public override async Task Run()
@@ -36,8 +42,9 @@ namespace CSharpLess.Controller
             {
                 return;
             }
-            var categoryController = new CategoryController(selectedCat);
-            await categoryController.Run();
+
+            _categoryController.SetModel(selectedCat);
+            await _categoryController.Run();
             await _sceneManager.Show(_homePage);
         }
 

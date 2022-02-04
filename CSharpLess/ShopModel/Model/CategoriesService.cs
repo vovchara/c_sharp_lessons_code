@@ -5,17 +5,23 @@ using System.Threading.Tasks;
 
 namespace ShopModel.Model
 {
-    public class CategoriesService
+    public class CategoriesService : ICategoriesService
     {
+        private readonly CategoriesStorage _categoriesStorage;
+
+        public CategoriesService(CategoriesStorage categoriesStorage)
+        {
+            _categoriesStorage = categoriesStorage;
+        }
+
         public async Task<CategoryModel[]> GetAllCategories()
         {
-            var storage = CategoriesStorage.GetInstance();
-            if (storage.Categories == null)
+            if (_categoriesStorage.Categories == null)
             {
-                storage.Categories = await LoadJson();
+                _categoriesStorage.Categories = await LoadJson();
             }
             
-            return storage.Categories;
+            return _categoriesStorage.Categories;
         }
 
         private async Task<CategoryModel[]> LoadJson()

@@ -1,4 +1,5 @@
-﻿using CSharpLess.View;
+﻿using CSharpLess.Scene;
+using CSharpLess.View;
 using ShopModel.Model;
 using System.Threading.Tasks;
 
@@ -7,10 +8,14 @@ namespace CSharpLess.Controller
     public class CategoryController : ControllerBase
     {
         private readonly TaskCompletionSource _tcs = new TaskCompletionSource();
-        private readonly CategoryModel _category;
+        private CategoryModel _category;
         private CategoryPage _categoryPage;
 
-        public CategoryController(CategoryModel category)
+        public CategoryController(ISceneManager sceneManager) : base(sceneManager)
+        {
+        }
+
+        public void SetModel(CategoryModel category)
         {
             _category = category;
         }

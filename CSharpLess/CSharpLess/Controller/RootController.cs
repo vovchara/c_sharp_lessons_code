@@ -1,17 +1,25 @@
 ﻿using CSharpLess.Scene;
 using CSharpLess.View;
 using ShopModel.Model;
-using System;
 using System.Threading.Tasks;
 
 namespace CSharpLess.Controller
 {
     public class RootController : ControllerBase
     {
-        private readonly ImagesService _imagesService;
-        public RootController()
+        private readonly IImagesService _imagesService;
+        private readonly LoginController _loginController;
+        private readonly HomeController _homeController;
+
+        public RootController(ISceneManager sceneManager,
+            LoginController loginController,
+            IImagesService imagesService,
+            HomeController homeController)
+            : base(sceneManager)
         {
-            _imagesService = new ImagesService();
+            _loginController = loginController;
+            _imagesService = imagesService;
+            _homeController = homeController;
         }
 
         public override async Task Run()
@@ -31,12 +39,10 @@ namespace CSharpLess.Controller
                 return;
             }
             //показуємо логін
-            var loginController = new LoginController();
-            await loginController.Run();
+            await _loginController.Run();
 
             //включаємо хом пейдж контроллер
-            var homeController = new HomeController();
-            await homeController.Run();
+            await _homeController.Run();
         }
 
 

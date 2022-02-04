@@ -4,22 +4,15 @@ using System.Windows.Controls;
 
 namespace CSharpLess.Scene
 {
-    public class SceneManager
+    public interface ISceneManager
     {
-        private static SceneManager _instance;
+        void SetRoot(Frame rootFrame);
+        Task Show(Page page);
+        Task Hide(Page page);
+    }
 
-        public static SceneManager GetInstance()
-        {
-            if (_instance == null)
-            {
-                _instance = new SceneManager();
-            }
-            return _instance;
-        }
-        private SceneManager()
-        {
-        }
-
+    public class SceneManager : ISceneManager
+    {
         private Frame _rootFrame;
         private readonly Page _empty = new Page();
 

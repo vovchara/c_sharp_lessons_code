@@ -7,13 +7,13 @@ namespace CSharpLess.Controller
 {
     public class LoginController : ControllerBase
     {
-        private readonly UserCredentialsService _credentialsService;
+        private readonly IUserCredentialsService _credentialsService;
         private LoginPage _loginPage;
         private readonly TaskCompletionSource _tcs = new TaskCompletionSource();
 
-        public LoginController()
+        public LoginController(ISceneManager sceneManager, IUserCredentialsService credentialsService) : base(sceneManager)
         {
-            _credentialsService = new UserCredentialsService();
+            _credentialsService = credentialsService;
         }
 
         public override async Task Run()

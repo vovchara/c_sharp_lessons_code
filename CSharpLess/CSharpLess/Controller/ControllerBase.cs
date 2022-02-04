@@ -7,11 +7,11 @@ namespace CSharpLess.Controller
 {
     public abstract class ControllerBase : IDisposable
     {
-        protected readonly SceneManager _sceneManager;
+        protected readonly ISceneManager _sceneManager;
 
-        public ControllerBase()
+        public ControllerBase(ISceneManager sceneManager)
         {
-            _sceneManager = SceneManager.GetInstance();
+            _sceneManager = sceneManager;
         }
 
         protected async Task<T> CreateAndShowPage<T>() where T : Page, new()

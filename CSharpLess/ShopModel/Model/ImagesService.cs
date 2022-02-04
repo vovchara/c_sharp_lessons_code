@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ShopModel.Model
 {
-    public class ImagesService
+    public class ImagesService : IImagesService
     {
         public async Task<bool> TryDownloadBaseImages()
         {

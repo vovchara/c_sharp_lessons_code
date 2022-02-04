@@ -1,14 +1,19 @@
 ﻿using Microsoft.Data.Sqlite;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ShopModel.Model
 {
-    public class UserCredentialsService
+    public class UserCredentialsService : IUserCredentialsService
     {
+        private readonly UserSessionStorage _sessionStorage;
+
+        public UserCredentialsService(UserSessionStorage sessionStorage)
+        {
+            _sessionStorage = sessionStorage;
+        }
+
         public async Task<bool> TryLogin(string login, string password)
         {
             var users = new List<UserCredentialModel>();
@@ -38,7 +43,7 @@ namespace ShopModel.Model
             {
                 return false;
             }
-            UserSessionStorage.GetInstance().SetUser(userFromDb);
+            _sessionStorage.SetUser(userFromDb);
             return true;
         }
     }

@@ -1,19 +1,6 @@
 ﻿using CSharpLess.Controller;
 using CSharpLess.Scene;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CSharpLess
 {
@@ -22,14 +9,12 @@ namespace CSharpLess
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(ISceneManager sceneManager, RootController rootController)
         {
             InitializeComponent();
 
-            var sceneManager = SceneManager.GetInstance();
             sceneManager.SetRoot(RootFrame);
 
-            var rootController = new RootController();
             rootController.Run();
         }
     }
