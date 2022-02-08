@@ -36,6 +36,8 @@ namespace CSharpLess
             services.AddTransient<HomeController>();
             services.AddTransient<CategoryController>();
 
+            services.AddTransient<IControllerFactory, ControllerFactory>();
+
             services.AddTransient<IImagesService, ImagesService>();
             services.AddTransient<ICategoriesService, CategoriesService>();
             services.AddTransient<IUserCredentialsService, UserCredentialsService>();

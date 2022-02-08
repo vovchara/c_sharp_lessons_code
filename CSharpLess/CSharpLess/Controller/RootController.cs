@@ -8,18 +8,15 @@ namespace CSharpLess.Controller
     public class RootController : ControllerBase
     {
         private readonly IImagesService _imagesService;
-        private readonly LoginController _loginController;
-        private readonly HomeController _homeController;
+        private readonly IControllerFactory _controllerFactory;
 
         public RootController(ISceneManager sceneManager,
-            LoginController loginController,
             IImagesService imagesService,
-            HomeController homeController)
+            IControllerFactory controllerFactory)
             : base(sceneManager)
         {
-            _loginController = loginController;
             _imagesService = imagesService;
-            _homeController = homeController;
+            _controllerFactory = controllerFactory;
         }
 
         public override async Task Run()
@@ -39,10 +36,12 @@ namespace CSharpLess.Controller
                 return;
             }
             //показуємо логін
-            await _loginController.Run();
+            var loginController = _controllerFactory.Create<LoginController>();
+            await loginController.Run();
 
             //включаємо хом пейдж контроллер
-            await _homeController.Run();
+            var homeController = _controllerFactory.Create<HomeController>();
+            await homeController.Run();
         }
 
 
